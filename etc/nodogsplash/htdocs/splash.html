@@ -76,7 +76,6 @@ video{width:100%;border-radius:4px;background:#000;max-height:200px;display:bloc
   <div class="divider"><span class="line"></span><span>Options</span><span class="line"></span></div>
   <div class="row-link" onclick="switchTab('voucher')"><span><span style="margin-right:8px">🔑</span>Voucher Login</span><span class="arrow">›</span></div>
   <div class="row-link" onclick="switchTab('buy')"><span><span style="margin-right:8px">📩</span>Message to Admin</span><span class="arrow">›</span></div>
- <div class="row-link" onclick="switchTab('watch')"><span><span style="margin-right:8px">📺</span>Watch</span><span class="arrow">›</span></div>
  <div class="row-link" onclick="openWiFiChat()"><span><span style="margin-right:8px">💬</span>WiFi Chat<span id="wcOnlinePill" style="display:none;font-size:10px;background:#e6f4ea;color:#1f7a33;border:1px solid #b7dfc2;border-radius:10px;padding:1px 7px;margin-left:7px;font-weight:700;">&#9679; 0 online</span></span><span style="display:flex;align-items:center;gap:8px"><span id="wcUnreadBadge" style="display:none;background:#dc2626;color:#fff;font-size:11px;font-weight:800;min-width:20px;height:20px;border-radius:10px;align-items:center;justify-content:center;padding:0 6px"></span><span class="arrow">›</span></span></div>
 </div>
 
@@ -194,35 +193,7 @@ video{width:100%;border-radius:4px;background:#000;max-height:200px;display:bloc
     </div>
   </div>
 </div>
-<div class="panel" id="panel-watch">
-  <button class="back-btn" onclick="switchTab('login')">← Back</button>
-  <div id="watchStatus" class="watch-area">Checking availability...</div>
-  <div id="watchVideoArea" style="display:none">
-    <div style="display:flex;align-items:center;gap:8px;background:#e6f4e6;border:1px solid #9fd39f;border-radius:4px;padding:8px 12px;margin-bottom:10px;font-size:12px">
-      <span style="width:7px;height:7px;border-radius:50%;background:#2e9e35"></span>
-      <span>Watching: <b id="liveUserCount" style="color:#1560d4">-</b> | Online Users: <b id="hotspotOnlineCount" style="color:#1560d4">-</b></span>
-    </div>
-    <div class="cat-row">
-      <button class="cat-btn active" id="catNews" onclick="switchCategory('news','catNews')">📰 News</button>
-      <button class="cat-btn" id="catNaat" onclick="switchCategory('naat','catNaat')">🕌 Naat</button>
-      <button class="cat-btn" id="catCartoon" onclick="switchCategory('cartoon','catCartoon')">🧸 Cartoon</button>
-    </div>
-    <div id="videoFullMsg" style="display:none;text-align:center;padding:20px;background:#fef2f2;border-radius:4px;margin-bottom:10px">
-      <div style="font-size:30px">⛔</div>
-      <div style="color:#dc2626;font-weight:700;font-size:14px;margin-top:6px">Jagah Nahi!</div>
-      <div style="color:#555;font-size:11px;margin-top:4px">Abhi 2 log dekh rahe hain. Kuch dair baad try karein.</div>
-    </div>
-    <video id="nexoraVideo" controls controlsList="nodownload" oncontextmenu="return false" playsinline preload="auto" style="width:100%;border-radius:4px;background:#000;max-height:200px"></video>
-    <div class="vid-nav">
-      <span id="pageInfo" style="color:#555">Loading...</span>
-      <div>
-        <button onclick="prevPage()" style="background:#e8f0fe;border:1px solid #1560d4;color:#1560d4;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer">◀</button>
-        <button onclick="nextPage()" style="background:#e8f0fe;border:1px solid #1560d4;color:#1560d4;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;margin-left:4px">▶</button>
-      </div>
-    </div>
-    <div class="vid-list" id="videoList"></div>
-  </div>
-</div>
+<div class="panel" id="panel-watch" style="display:none"></div>
 
 </div>
 

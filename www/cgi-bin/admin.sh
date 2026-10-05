@@ -256,29 +256,11 @@ if [ -n "$arp_all" ]; then
         fi
         devname=$(get_name "$mac")
         if [ -z "$devname" ]; then
-            spinline=$(grep "^Nexora-[123]H-[^ ]* LOCKED-$mac-" "$VOUCHER_FILE" 2>/dev/null | tail -n1)
-            spin_ok=0
-            if [ -n "$spinline" ]; then
-                sexp=$(printf '%s' "$spinline" | sed -n 's/.*-EXP-//p')
-                case "$sexp" in ''|*[!0-9]*) sexp="" ;; esac
-                [ -n "$sexp" ] && [ "$sexp" -gt "$(date +%s)" ] && spin_ok=1
-            fi
-            if [ "$spin_ok" -eq 1 ]; then
-                case "$spinline" in
-                    Nexora-1H-*) devname="&#127920; Spin 1 Ghanta" ;;
-                    Nexora-2H-*) devname="&#127920; Spin 2 Ghante" ;;
-                    Nexora-3H-*) devname="&#127920; Spin 3 Ghante" ;;
-                esac
-            else
-                devname="$mac"
-            fi
+            devname="$mac"
         fi
         edit_link="<a href='admin.sh?pass=$ADMIN_PASS&editname=$mac' style='color:#a78bfa;text-decoration:none;'>✏️</a>"
         card_open="<div class='device-card' style='border:1px solid rgba(0,245,255,.2);border-radius:16px;padding:14px 16px;margin-bottom:10px;background:rgba(0,20,30,.5);box-shadow:0 0 10px rgba(0,245,255,.06);'>"
-        spinlive=0
-        SLINE=$(grep "^Nexora-[123]H-.*LOCKED-$mac-" "$VOUCHER_FILE" 2>/dev/null | tail -n1)
-        [ -n "$SLINE" ] && { SEXP=$(printf '%s' "$SLINE" | sed -n 's/.*-EXP-//p'); case "$SEXP" in ''|*[!0-9]*) SEXP="";; esac; [ -n "$SEXP" ] && [ "$SEXP" -gt "$(date +%s)" ] && spinlive=1; }
-        if [ "$spinlive" -eq 1 ] || grep -qi "^$mac$" "$TRUSTED_FILE" 2>/dev/null; then
+        if grep -qi "^$mac$" "$TRUSTED_FILE" 2>/dev/null; then
                         auth_entries="${auth_entries}${card_open}
 <div style='display:flex;justify-content:space-between;align-items:center;'><div style='font-weight:700;font-size:.95rem;'>${devname}</div><div style='display:flex;align-items:center;gap:8px;'><span style='font-size:.75rem;color:#22c55e;'>$(get_wifi_band "$mac")</span><div data-signal='${mac}'></div></div></div>
 <div style='font-family:monospace;font-size:.7rem;color:#64748b;margin-top:4px;'>${mac} · $(get_manufacturer "$mac") · ${client_ip}</div>
@@ -546,17 +528,9 @@ grep "LOCKED-" "$VOUCHER_FILE" | while read -r line; do
     expire=$(echo "$line" | sed -n 's/.*-EXP-\([0-9]*\)$/\1/p')
     [ -z "$expire" ] && expire=$((start + 2592000))
     remaining=$(( (expire - NOW) / 86400 ))
-    spinprize=""
-    case "$tkey" in
-      Nexora-1H-*) spinprize="1 Ghanta" ;;
-      Nexora-2H-*) spinprize="2 Ghante" ;;
-      Nexora-3H-*) spinprize="3 Ghante" ;;
-    esac
     devname=$(get_name "$tmac")
     phone=$(grep "|${tmac}|" "/etc/nodogsplash/requests.txt" 2>/dev/null | tail -1 | cut -d"|" -f2)
-    if [ -n "$spinprize" ]; then
-        NAMECELL="&#127920; Spin $spinprize"
-    elif [ -n "$devname" ] && [ -n "$phone" ]; then
+    if [ -n "$devname" ] && [ -n "$phone" ]; then
         NAMECELL="$devname<br><span style='color:#64748b;font-size:.7rem'>$phone</span>"
     elif [ -n "$devname" ]; then
         NAMECELL="$devname"
@@ -565,16 +539,7 @@ grep "LOCKED-" "$VOUCHER_FILE" | while read -r line; do
     else
         NAMECELL="-"
     fi
-    if [ -n "$spinprize" ]; then
-        SLEFT=$((expire - NOW))
-        if [ "$SLEFT" -le 0 ]; then TIMECELL="Expired"; else
-        SHH=$((SLEFT / 3600)); SMM=$(((SLEFT % 3600) / 60))
-        if [ "$SHH" -gt 0 ]; then TIMECELL="${SHH}h ${SMM}m"; else TIMECELL="${SMM}m"; fi
-        fi
-        [ -n "$spinprize" ] && [ "$SLEFT" -gt 0 ] && TIMECELL="<span class='spinT' data-exp='${expire}'>${TIMECELL}</span>"
-    else
-        TIMECELL="${remaining}d"
-    fi
+    TIMECELL="${remaining}d"
     [ -z "$devname" ] && devname="-"
     echo "<tr><td>$NAMECELL</td><td class='mo'>$tmac</td><td class='mo'>$tkey</td><td><span class='chip cy2'>$TIMECELL</span></td><td style='display:flex;gap:6px;flex-wrap:wrap'><a href='admin.sh?pass=$ADMIN_PASS&editname=$tmac' class='btn bc bsm' style='text-decoration:none'>Rename</a><form method='post' style='margin:0'><input type='hidden' name='action' value='delmac'><input type='hidden' name='mac' value='$tmac'><button class='btn br bsm' type='submit'>Remove</button></form></td></tr>"
 done
@@ -608,15 +573,6 @@ echo "<a href='/vidmgr.html' target='_blank' style='text-decoration:none'><butto
 echo "<a href='/cgi-bin/announce.sh?pass=$ADMIN_PASS' target='_blank' style='text-decoration:none'><button class='btn bp' type='button'>📢 Announcement</button></a>"
 echo "<a href='/mesh_map.html' target='_blank' style='text-decoration:none'><button class='btn bp' type='button'>&#128506; Mesh Map</button></a>"
 echo "</div>"
-# ---------- Watch Chat ----------
-echo "<div class='sec'>"
-echo "<div class='stitle'>💬 Watch Chat (Live)</div>"
-echo "<div id='pinnedMsgBox' style='display:none;background:rgba(34,197,94,0.1);border:1px solid #22c55e;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px;color:#22c55e;'>📌 <span id='pinnedMsgText'></span> <button onclick=\"unpinMsg()\" style='float:right;background:none;border:none;color:#ef4444;cursor:pointer;'>✕</button></div>"
-echo "<div id='watchChatAdmin'></div>"
-echo "<div style='display:flex;gap:8px;margin-top:10px;'>"
-echo "<input class='iv' type='text' id='adminChatMsg' placeholder='Reply likhein...' onkeypress='if(event.key===\"Enter\")sendAdminChatMsg();'>"
-echo "<button type='button' onclick='sendAdminChatMsg()' class='btn bg'>Bhejein</button>"
-echo "</div></div>"
 # ---------- WiFi Chat Bubble ----------
 echo "<script>var WCPASS='$ADMIN_PASS';</script>"
 echo "<style>"
@@ -645,15 +601,6 @@ echo "<button type='button' onclick='sendWifiChatMsg()' class='btn bg'>Bhejein</
 echo "</div></div>"
 cat << 'FOOTER'
 <script>
-setInterval(function(){
-  var els=document.querySelectorAll('.spinT');
-  for(var i=0;i<els.length;i++){
-    var l=parseInt(els[i].getAttribute('data-exp'),10)-Math.floor(Date.now()/1000);
-    if(l<=0){els[i].textContent='Expired';continue;}
-    var h=Math.floor(l/3600),m=Math.floor((l%3600)/60);
-    els[i].textContent=h>0?(h+'h '+m+'m'):(m+'m');
-  }
-},30000);
 function toggleVouchers(){
   var x=document.getElementById("voucherTable");var btn=document.getElementById("toggleBtn");
   if(x.style.display==="none"){x.style.display="block";btn.innerText="🔼 Hide";}else{x.style.display="none";btn.innerText="🔽 Show";}
@@ -664,28 +611,7 @@ function sw(n,el){
   document.getElementById('t-'+n).classList.add('on');
   el.classList.add('on');
 }
-var pinnedMsg=localStorage.getItem("nexoraPinnedMsg")||"";
-function renderPinned(){if(pinnedMsg){document.getElementById("pinnedMsgBox").style.display="block";document.getElementById("pinnedMsgText").textContent=pinnedMsg;}else{document.getElementById("pinnedMsgBox").style.display="none";}}
-function pinMsg(t){pinnedMsg=t;localStorage.setItem("nexoraPinnedMsg",t);renderPinned();}
-function unpinMsg(){pinnedMsg="";localStorage.removeItem("nexoraPinnedMsg");renderPinned();}
-function loadAdminChat(){fetch("/cgi-bin/watch_chat.sh?action=get&t="+Date.now()).then(function(r){return r.text();}).then(function(t){
-var lines=t.split(String.fromCharCode(10)).filter(function(x){return x.trim();});
-var html="";
-for(var i=0;i<lines.length;i++){
-var line=lines[i];
-var isAdmin=line.indexOf("Admin:")!==-1;
-var esc=line.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-if(isAdmin){
-html+="<div style=\"background:rgba(34,197,94,0.12);border-left:3px solid #22c55e;border-radius:6px;padding:6px 10px;margin-bottom:6px;color:#22c55e;font-weight:600;\">"+esc+"</div>";
-}else{
-html+="<div style=\"padding:6px 10px;margin-bottom:6px;color:#e2e8f0;cursor:pointer;\" title=\"Click to pin\" onclick='pinMsg(this.textContent)'>"+esc+"</div>";
-}
-}
-document.getElementById("watchChatAdmin").innerHTML=html;
-var b=document.getElementById("watchChatAdmin");b.scrollTop=b.scrollHeight;
-});}
-function sendAdminChatMsg(){var inp=document.getElementById("adminChatMsg");var msg=inp.value.trim();if(!msg)return;fetch("/cgi-bin/admin_chat_reply.sh?msg="+encodeURIComponent(msg)).then(function(){inp.value="";loadAdminChat();});}
-renderPinned();loadAdminChat();setInterval(loadAdminChat,4000);
+var pinnedMsg="";
 var WCPASS=window.WCPASS||"CHANGE_ME_ADMIN_PASS";
 var wcOpen=false,wcLastRead=0,wcInit=false;
 function wcCountUsers(lines){var c=0;for(var i=0;i<lines.length;i++){if(lines[i].trim()&&lines[i].indexOf("[ADMIN]")===-1)c++;}return c;}
@@ -704,7 +630,7 @@ html+="<div style=\"background:rgba(34,197,94,0.12);border-left:3px solid #22c55
 var pm=line.match(/^\[([^\]]+)\]\s+(.*?)\s+\[([^\]]+)\]:\s(.*)$/);
 if(pm){
 var uc=wcColor(pm[3]);
-html+="<div style=\"border-left:3px solid "+uc+";background:rgba(255,255,255,0.04);border-radius:6px;padding:6px 10px;margin-bottom:6px;color:#e2e8f0;cursor:pointer;\" title=\"Click to pin\" onclick='pinMsg(this.textContent)'>";
+html="<div style=\"border-left:3px solid "+uc+";background:rgba(255,255,255,0.04);border-radius:6px;padding:6px 10px;margin-bottom:6px;color:#e2e8f0;\">";
 html+="<b style=\"color:"+uc+"\">"+wcE(pm[2])+"</b> <span style=\"color:#64748b;font-size:10px\">";
 html+=wcE(pm[1])+" \u2022 "+wcE(pm[3])+"</span>";
 var vv="";
@@ -718,7 +644,7 @@ vv="<div>"+vv+"</div>";
 }
 html+="<div>"+(vv?vv:wcE(pm[4]))+"</div></div>";
 }else{
-html+="<div style=\"padding:6px 10px;margin-bottom:6px;color:#e2e8f0;cursor:pointer;\" title=\"Click to pin\" onclick='pinMsg(this.textContent)'>"+wcE(line);
+html+="<div style=\"padding:6px 10px;margin-bottom:6px;color:#e2e8f0;\">"+wcE(line);
 html+="</div>";
 }
 }
@@ -767,7 +693,7 @@ if(i===ai)html+='<div style="text-align:right;font-size:10px;color:#60a5fa;margi
 }else{
 var uc=wcColor(x.id);
 html+='<div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px"><div style="width:30px;height:30px;border-radius:50%;background:'+uc+';color:#0b1220;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none">'+wcE((x.nm.trim().charAt(0)||"?").toUpperCase())+'</div>';
-html+='<div style="max-width:78%;background:#1e293b;color:#e2e8f0;border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:13px;line-height:1.4;overflow-wrap:anywhere;cursor:pointer" title="Click to pin" onclick="pinMsg(this.textContent)">';
+html+='<div style="max-width:78%;background:#1e293b;color:#e2e8f0;border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:13px;line-height:1.4;overflow-wrap:anywhere">';
 html+='<div style="font-size:11px;font-weight:700;color:'+uc+';margin-bottom:2px">'+wcE(x.nm)+' <span style="color:#64748b;font-weight:400">\u2022 '+wcE(x.id)+'</span></div>'+body;
 html+='<div style="font-size:10px;color:#64748b;text-align:right;margin-top:3px">'+wcE(x.tm)+'</div></div></div>';
 }
