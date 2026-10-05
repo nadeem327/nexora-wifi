@@ -1,0 +1,128 @@
+
+config dnsmasq
+	option domainneeded '1'
+	option localise_queries '1'
+	option rebind_protection '1'
+	option rebind_localhost '1'
+	option local '/lan/'
+	option domain 'lan'
+	option expandhosts '1'
+	option cachesize '1000'
+	option authoritative '1'
+	option readethers '1'
+	option leasefile '/tmp/dhcp.leases'
+	option resolvfile '/tmp/resolv.conf.d/resolv.conf.auto'
+	option localservice '1'
+	option ednspacket_max '1232'
+	list address '/status.client/192.168.30.1'
+	option logqueries '1'
+	option logfacility '/tmp/dnsmasq.log'
+	list ignore 'hacker'
+	option noresolv '1'
+	list server '1.1.1.1'
+	list server '8.8.8.8'
+
+config dhcp 'lan'
+	option interface 'lan'
+	option start '100'
+	option limit '150'
+	option leasetime '12h'
+	option dhcpv4 'server'
+	option dhcpv6 'server'
+	option ra 'server'
+	option ra_slaac '1'
+	list ra_flags 'managed-config'
+	list ra_flags 'other-config'
+	option ignore '0'
+
+config dhcp 'wan'
+	option interface 'wan'
+	option ignore '1'
+
+config odhcpd 'odhcpd'
+	option maindhcp '0'
+	option leasefile '/tmp/hosts/odhcpd'
+	option leasetrigger '/usr/sbin/odhcpd-update'
+	option loglevel '4'
+	option piofolder '/tmp/odhcpd-piofolder'
+
+config dhcp 'hotspot'
+	option interface 'hotspot'
+	option start '100'
+	option limit '150'
+	option leasetime '12h'
+
+config host
+	option name 'MyPC'
+	list mac 'f8:71:0c:33:d9:b8'
+	option ip '192.168.30.117'
+	option leasetime 'infinite'
+
+config host
+	option name 'TV'
+	option ip '192.168.30.167'
+	option leasetime 'infinite'
+	list mac '98:a8:29:65:84:0f'
+
+config host
+	option name 'Hadi'
+	option ip '192.168.30.100'
+	option leasetime 'infinite'
+	list mac 'f8:71:0c:33:d9:b8'
+
+config host
+	option name 'Sajida'
+	option ip '192.168.30.212'
+	option leasetime 'infinite'
+	list mac 'C4:40:f6:06:8e:1f'
+
+config host
+	option name 'Waseem'
+	option ip '192.168.30.216'
+	option leasetime 'infinite'
+	list mac 'c:be:eb:22:88:f9'
+
+config host
+	option name 'Sajid'
+	option ip '192.168.30.222'
+	option leasetime 'infinite'
+	list mac '20:82:6a:95:47:4d'
+
+config host
+	option name 'Nexora'
+	list mac 'a8:db:03:59:cb:2e'
+	option ip '192.168.30.223'
+	option leasetime 'infinite'
+
+config host
+	option name 'GulloNexora'
+	list mac 'b8:98:ad:78:3e:72'
+	option ip '192.168.30.224'
+	option leasetime 'infinite'
+
+config host
+	option name 'Tenda'
+	list mac 'b4:0f:3b:78:ed:60'
+	list mac 'b4:0f:3b:78:ed:67'
+	option ip '192.168.30.235'
+	option leasetime 'infinite'
+
+config host
+	option name 'Akbar'
+	list mac 'd2:5a:54:97:a4:78'
+	option ip '192.168.20.220'
+	option leasetime 'infinite'
+
+config host
+	option name 'AkbarHome'
+	list mac '5e:9f:47:a7:71:cd'
+	option ip '192.168.20.193'
+	option leasetime 'infinite'
+
+config host
+	option name 'Jellyfin-server'
+	option mac 'd8:0f:99:73:f6:bd'
+	option ip '192.168.20.146'
+	option interface 'hotspot'
+	option leasetime 'infinite'
+

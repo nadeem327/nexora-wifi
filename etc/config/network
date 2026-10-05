@@ -1,0 +1,90 @@
+
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option ula_prefix 'fd90:6b54:38b3::/48'
+	option packet_steering '1'
+
+config device
+	option name 'br-lan'
+	option type 'bridge'
+	list ports 'lan1'
+	list ports 'lan2'
+	list ports 'lan3'
+	list ports 'bat0'
+
+config interface 'lan'
+	option device 'br-lan'
+	option proto 'static'
+	option ipaddr '192.168.30.1'
+	option netmask '255.255.255.0'
+	option ip6assign '60'
+	option ipv6 '0'
+
+config device
+	option name 'br-hotspot'
+	option type 'bridge'
+	list ports 'phy1-ap1 phy0-ap1'
+	list ports 'bat0'
+	list ports 'bat0'
+
+config interface 'hotspot'
+	option device 'br-hotspot'
+	option proto 'static'
+	option ipaddr '192.168.20.1'
+	option netmask '255.255.255.0'
+	option ifname 'br-hotspot bat0'
+	list ports 'bat0'
+	option ipv6 '0'
+
+config interface 'wan'
+	option device 'wan'
+	option proto 'dhcp'
+	option peerdns '0'
+	option dns '8.8.8.8 1.1.1.1'
+	option type 'bridge'
+
+config interface 'wan6'
+	option device 'wan'
+	option proto 'dhcpv6'
+	option disabled '1'
+
+config device
+	option name 'phy1-ap1'
+	option type '80211'
+
+config interface 'protonvpn'
+	option proto 'wireguard'
+	option private_key 'kPwubuy6vIye9F2gaTfMQpJL2JQ/uLenxdp2FaQ9PWs='
+	option addresses '10.2.0.2/32'
+	option dns '10.2.0.1'
+	option disabled '1'
+
+config wireguard_protonvpn 'wgproton'
+	option public_key 'SOXFyakZ9HI9TeiMRyMoy3PXYEzJJ/IDJcMvxZ3uWSE='
+	option endpoint_host '149.102.254.90'
+	option endpoint_port '51820'
+	option persistent_keepalive '25'
+	option allowed_ips '0.0.0.0/0'
+
+config interface 'bat0'
+	option proto 'batadv'
+	option routing_algo 'BATMAN_IV'
+
+config interface 'bat0_hardif'
+	option proto 'batadv_hardif'
+	option master 'bat0'
+	option mesh 'bat0'
+	option mtu '1532'
+
+config interface 'wwan'
+	option proto 'dhcp'
+
+config interface 'vpn0'
+	option proto 'none'
+	option device 'tun0'
+

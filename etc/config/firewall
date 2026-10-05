@@ -1,0 +1,267 @@
+
+config defaults
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option synflood_protect '1'
+
+config zone
+	option name 'lan'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+	option masq '1'
+	option mtu_fix '1'
+	list network 'lan'
+
+config zone
+	option name 'wan'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+	list network 'wan'
+	list network 'wan6'
+	list network 'wwan'
+
+config zone
+	option name 'hotspot'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	list network 'hotspot'
+	option masq '1'
+	option mtu_fix '1'
+
+config forwarding
+	option src 'lan'
+	option dest 'wan'
+
+config forwarding
+	option src 'hotspot'
+	option dest 'wan'
+
+config rule
+	option name 'Allow-DHCP-Renew'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '68'
+	option target 'ACCEPT'
+	option family 'ipv4'
+
+config rule
+	option name 'Allow-Ping'
+	option src 'wan'
+	option proto 'icmp'
+	option icmp_type 'echo-request'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-IGMP'
+	option src 'wan'
+	option proto 'igmp'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-DHCPv6'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '546'
+	option target 'ACCEPT'
+	option family 'ipv6'
+
+config rule
+	option name 'Allow-MLD'
+	option src 'wan'
+	option proto 'icmp'
+	option src_ip 'fe80::/10'
+	list icmp_type '130/0'
+	list icmp_type '131/0'
+	list icmp_type '143/0'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-ICMPv6-Input'
+	option src 'wan'
+	option proto 'icmp'
+	list icmp_type '1/0'
+	list icmp_type '2/0'
+	list icmp_type '3/0'
+	list icmp_type '4/0'
+	list icmp_type '133/0'
+	list icmp_type '135/0'
+	list icmp_type '136/0'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-ICMPv6-Forward'
+	option src 'wan'
+	option dest '*'
+	option proto 'icmp'
+	list icmp_type '1/0'
+	list icmp_type '2/0'
+	list icmp_type '3/0'
+	list icmp_type '4/0'
+	list icmp_type '134/0'
+	list icmp_type '135/0'
+	list icmp_type '136/0'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-IPSec-ESP'
+	option src 'wan'
+	option dest '*'
+	option proto 'esp'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-ISAKMP'
+	option src 'wan'
+	option dest '*'
+	option proto 'udp'
+	option dest_port '500'
+	option target 'ACCEPT'
+
+config forwarding
+	option src 'hotspot'
+	option dest 'wan'
+
+config include 'nodogsplash'
+	option type 'script'
+	option path '/usr/lib/nodogsplash/restart.sh'
+
+config rule
+	option name 'Allow-Luci-from-MainRouter'
+	option src 'wan'
+	option src_ip '192.168.100.0/24'
+	option dest_port '80'
+	option proto 'tcp'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-Luci-from-MainRouter'
+	option src 'wan'
+	option src_ip '192.168.100.0/24'
+	option dest_port '80'
+	option proto 'tcp'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-Luci-HTTPS-MainRouter'
+	option src 'wan'
+	option src_ip '192.168.100.0/24'
+	option dest_port '443'
+	option proto 'tcp'
+	option target 'ACCEPT'
+
+config zone
+	option name 'tailscale'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+	option masq '1'
+	list network 'tailscale'
+
+config forwarding
+	option src 'tailscale'
+	option dest 'wan'
+
+config rule
+	option name 'MiniDLNA'
+	option src 'lan'
+	option proto 'tcpudp'
+	option dest_port '8200'
+	option target 'ACCEPT'
+
+config forwarding
+	option src 'wan'
+	option dest 'lan'
+
+config include
+	option type 'script'
+	option path '/etc/firewall.user'
+	option fw4_compatible '1'
+
+config zone
+	option name 'protonvpn'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+	list network 'protonvpn'
+
+config forwarding
+	option src 'lan'
+	option dest 'protonvpn'
+
+config forwarding
+	option src 'hotspot'
+	option dest 'protonvpn'
+
+config zone
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+	list network 'protonvpn'
+
+config forwarding
+	option src 'hotspot'
+	option dest 'vpn'
+
+config zone
+	option name 'chilli'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+	option masq '1'
+	option device 'tun0'
+
+config forwarding
+	option src 'chilli'
+	option dest 'wan'
+
+config rule
+	option name 'Allow-Tailscale-Web'
+	option src '*'
+	option proto 'tcp'
+	option dest_port '80 443'
+	option target 'ACCEPT'
+
+config zone
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+	list network 'vpn0'
+
+config forwarding
+	option src 'lan'
+	option dest 'vpn'
+
+config zone 'vpn_zone'
+	option name 'vpn'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+	option network 'vpn0'
+
+config forwarding 'vpn_forwarding'
+	option src 'lan'
+	option dest 'vpn'
+
+config rule
+	option name 'Hotspot-DNS-Pihole'
+	option src 'hotspot'
+	option dest 'lan'
+	option dest_ip '192.168.20.147'
+	option dest_port '53'
+	option proto 'tcp udp'
+	option target 'ACCEPT'
+

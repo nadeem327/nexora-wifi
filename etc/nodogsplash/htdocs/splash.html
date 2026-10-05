@@ -1,0 +1,741 @@
+<!DOCTYPE html><html lang="ur" dir="ltr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>Nexora WiFi</title><style>
+*{margin:0;padding:0;box-sizing:border-box}body{background:#ece9d8;color:#000;font-family:Tahoma,"Segoe UI",Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0}
+.topband{width:100%;background:#1560d4;padding:10px 16px 10px;text-align:center;border-bottom:2px solid #0a3d91}
+.logo{font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;text-shadow:1px 1px 0 #0a3d91}
+.logo-sub{font-size:9px;letter-spacing:2.5px;color:#cfe0fa;margin-top:2px}
+.info-banner{margin:12px 16px 0;padding:8px 12px;background:#fffbcc;border:1px solid #e0d68a;border-radius:2px;font-size:12px;color:#5a4a00;text-align:center;line-height:1.5;max-width:340px;margin-left:auto;margin-right:auto}
+.retro-strip{margin:10px auto 0;display:inline-flex;align-items:center;gap:10px;padding:6px 4px;border-top:1px dashed rgba(46,110,46,0.4);border-bottom:1px dashed rgba(46,110,46,0.4);font-family:'Courier New',monospace;color:#1f5c26;background:transparent}
+.retro-bars{display:flex;align-items:flex-end;gap:2px;height:13px}
+.retro-bars span{width:3px;background:#1f5c26}
+.retro-bars span.off{background:#b9c8b3;opacity:0.7}
+.retro-bars span:nth-child(1){height:5px}
+.retro-bars span:nth-child(2){height:8px}
+.retro-bars span:nth-child(3){height:11px}
+.retro-bars span:nth-child(4){height:14px}
+.retro-text{font-size:11px;font-weight:700;letter-spacing:0.5px}
+.retro-sub{font-size:10px;font-weight:700;opacity:0.9;white-space:nowrap}
+.main{width:100%;max-width:400px;padding:22px 20px 0;flex:1;display:flex;flex-direction:column}
+.panel{background:#fff;border:1px solid #b8c9e0;border-radius:4px;padding:16px;box-shadow:1px 1px 3px rgba(0,0,0,0.15);display:none}
+.panel.active{display:block}
+.field-label{font-size:11px;color:#333;margin-bottom:6px;font-weight:600}
+.input-field{width:100%;padding:10px 12px;border-radius:2px;border:1px solid #7f9db9;background:#fff;color:#000;font-size:14px;margin-bottom:10px}
+.input-field:focus{outline:1px solid #316ac5}
+.input-field::placeholder{color:#999}
+.btn{width:100%;padding:11px;border:1px solid #0a3d91;border-radius:3px;background:linear-gradient(180deg,#3f8cf3,#1560d4);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.btn:active{background:#0a3d91}
+.btn-email{background:linear-gradient(180deg,#22c55e,#16a34a);border-color:#14532d}
+.btn-email:active{background:#14532d}
+.helper-note{font-size:11.5px;color:#555;text-align:center;margin-top:12px;line-height:1.5}
+.divider{display:flex;align-items:center;gap:10px;margin:22px 0 14px}
+.divider .line{flex:1;height:1px;background:#c7c7c7}
+.divider span{font-size:10.5px;color:#777;text-transform:uppercase;letter-spacing:1px}
+.row-link{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;background:#fff;border:1px solid #c7c7c7;border-radius:3px;text-decoration:none;color:#000;font-size:13px;margin-bottom:8px;cursor:pointer}
+.row-link .arrow{color:#999;font-size:14px}
+.back-btn{display:inline-block;padding:6px 14px;background:#f0f0f0;border:1px solid #c7c7c7;border-radius:3px;font-size:12px;color:#333;cursor:pointer;margin-bottom:12px}
+.plan-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.plan-btn{padding:12px 8px;border-radius:4px;border:1.5px solid #c7c7c7;background:#fff;cursor:pointer;text-align:center;font-size:12px}
+.plan-btn.active{border-color:#1560d4;background:#e8f0fe}
+.plan-btn b{font-size:18px;display:block;margin:4px 0}
+.plan-btn small{color:#777;text-decoration:line-through;display:block;margin-bottom:2px}
+.raast-box{background:#fffbeb;border:1px solid #f59e0b;border-radius:4px;padding:10px 12px;margin-bottom:12px;font-size:11.5px;line-height:1.5}
+.raast-box span{font-size:15px;color:#1560d4;font-weight:700;display:block;margin:4px 0}
+.err-msg{display:none;color:#dc2626;font-size:11px;margin-bottom:8px;padding:8px;background:#fef2f2;border-radius:4px;border:1px solid #fecaca}
+.pending-box{display:none;text-align:center;padding:20px}
+.pending-icon{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:24px;color:#fff}
+.timer-display{font-size:36px;font-weight:800;color:#1560d4;margin:8px 0}
+.watch-area{text-align:center;padding:20px;color:#555}
+.cat-row{display:flex;gap:6px;margin-bottom:10px}
+.cat-btn{flex:1;padding:8px 4px;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;background:#f0f0f0;color:#555}
+.cat-btn.active{background:#1560d4;color:#fff}
+video{width:100%;border-radius:4px;background:#000;max-height:200px;display:block;margin-bottom:8px}
+.vid-nav{display:flex;align-items:center;justify-content:space-between;background:#f8f8f8;border:1px solid #ddd;border-radius:4px;padding:6px 10px;margin-bottom:8px;font-size:11px}
+.vid-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:160px;overflow-y:auto;margin-bottom:10px}
+.vid-item{background:#f0f0f0;border:1px solid #ddd;border-radius:4px;padding:8px;cursor:pointer;font-size:11px}
+.vid-item.selected{border-color:#1560d4;background:#e8f0fe}
+.footer{width:100%;max-width:400px;padding:22px 20px 30px;text-align:center;font-size:11.5px;color:#555}
+.footer b{color:#000}
+@keyframes pulseG{0%,100%{box-shadow:0 0 14px rgba(255,215,0,0.5),inset 0 2px 6px rgba(255,255,255,0.5)}50%{box-shadow:0 0 30px rgba(255,215,0,0.95),inset 0 2px 6px rgba(255,255,255,0.5)}}
+.admin-contact{margin-top:4px;color:#1560d4}
+</style></head><body>
+
+<div class="topband"><div class="logo">Nexora</div><div class="logo-sub">W I F I</div></div>
+<div class="info-banner">اعمال کا دارومدار نیتوں پر ہے۔ (صحیح بخاری)</div>
+<div style="text-align:center"><div class="retro-strip"><span class="retro-text" id="signalLabel">SIGNAL</span><div class="retro-bars" id="signalBars"><span class="off"></span><span class="off"></span><span class="off"></span><span class="off"></span></div><span class="retro-sub" id="signalSub">Checking...</span></div></div>
+<div id="nodeIndicator" style="display:none;text-align:center;font-size:10px;font-weight:700;color:#b45309;margin-top:2px;"></div>
+
+<div class="main">
+
+<!-- LOGIN PANEL (hero + Options) -->
+<div class="panel active" id="panel-login">
+  <!-- Nexora WiFi Logo/Branding -->
+  <div style="text-align:center;margin-bottom:12px;padding:16px 8px;background:linear-gradient(135deg, rgba(21,96,212,0.05), rgba(21,96,212,0.15));border-radius:10px;border:1px solid rgba(21,96,212,0.2);">
+    <div style="font-size:28px;font-weight:800;color:#1560d4;letter-spacing:1px;">Nexora</div>
+    <div style="font-size:11px;color:#555;margin-top:2px;">High-Speed WiFi Network</div>
+    <img src="/banner.jpg" alt="Nexora WiFi" style="display:none;width:100%;max-height:120px;object-fit:contain;border-radius:6px;margin-top:8px;">
+  </div>
+  <div class="divider"><span class="line"></span><span>Options</span><span class="line"></span></div>
+  <div class="row-link" onclick="switchTab('voucher')"><span><span style="margin-right:8px">🔑</span>Voucher Login</span><span class="arrow">›</span></div>
+  <div class="row-link" onclick="switchTab('buy')"><span><span style="margin-right:8px">📩</span>Message to Admin</span><span class="arrow">›</span></div>
+ <div class="row-link" onclick="switchTab('watch')"><span><span style="margin-right:8px">📺</span>Watch</span><span class="arrow">›</span></div>
+ <div class="row-link" onclick="openWiFiChat()"><span><span style="margin-right:8px">💬</span>WiFi Chat<span id="wcOnlinePill" style="display:none;font-size:10px;background:#e6f4ea;color:#1f7a33;border:1px solid #b7dfc2;border-radius:10px;padding:1px 7px;margin-left:7px;font-weight:700;">&#9679; 0 online</span></span><span style="display:flex;align-items:center;gap:8px"><span id="wcUnreadBadge" style="display:none;background:#dc2626;color:#fff;font-size:11px;font-weight:800;min-width:20px;height:20px;border-radius:10px;align-items:center;justify-content:center;padding:0 6px"></span><span class="arrow">›</span></span></div>
+</div>
+
+<!-- VOUCHER LOGIN PANEL (moved to menu item) -->
+<div class="panel" id="panel-voucher">
+  <button class="back-btn" onclick="switchTab('login')">← Back</button>
+  <h4 style="text-align:center;margin:12px 0 4px;color:#1560d4;">🔑 Voucher Login</h4>
+  <p class="panel-desc" style="text-align:center;font-size:11px;color:#555;margin-bottom:12px;">Admin se voucher key maang kar is form mein daalo.</p>
+  <div class="field-label">Voucher Key</div>
+  <form method="GET" action="$authaction" id="main-form">
+    <input type="hidden" name="tok" value="$tok">
+    <input type="hidden" name="redir" value="$redir">
+    <input type="text" name="username" class="input-field" placeholder="e.g. Nexora-XXXXXXXX" required style="font-family:monospace;">
+    <button type="submit" class="btn">🌐 Login Internet</button>
+  </form>
+  <div class="helper-note">Koi issue ho? Admin se rabta karein.</div>
+</div>
+
+<!-- PLAN INFO PANEL (replaces Spin & Win) -->
+<div class="panel" id="panel-email">
+<button class="back-btn" onclick="switchTab('login')">← Back</button>
+<div style="text-align:center;padding:14px 0 8px;">
+  <div style="font-size:22px;font-weight:900;color:#1560d4;letter-spacing:2px;">📋 Pricing Plans</div>
+  <div style="font-size:11px;color:#64748b;margin-top:4px;">Contact admin to buy a voucher key</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr;gap:10px;padding:4px;">
+  <div style="background:rgba(21,96,212,0.08);border:1px solid rgba(21,96,212,0.2);border-radius:12px;padding:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:14px;font-weight:800;color:#1d4ed8;">1 Day Pass</div>
+        <div style="font-size:10px;color:#64748b;">24 hours internet</div>
+      </div>
+      <div style="font-size:16px;font-weight:900;color:#1560d4;">Plan A</div>
+    </div>
+  </div>
+  <div style="background:rgba(21,96,212,0.08);border:1px solid rgba(21,96,212,0.2);border-radius:12px;padding:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:14px;font-weight:800;color:#1d4ed8;">Weekly Pass</div>
+        <div style="font-size:10px;color:#64748b;">7 days unlimited</div>
+      </div>
+      <div style="font-size:16px;font-weight:900;color:#1560d4;">Plan B</div>
+    </div>
+  </div>
+  <div style="background:rgba(21,96,212,0.08);border:1px solid rgba(21,96,212,0.2);border-radius:12px;padding:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:14px;font-weight:800;color:#1d4ed8;">Monthly Pass</div>
+        <div style="font-size:10px;color:#64748b;">30 days unlimited</div>
+      </div>
+      <div style="font-size:16px;font-weight:900;color:#1560d4;">Plan C</div>
+    </div>
+  </div>
+</div>
+<div style="text-align:center;margin-top:12px;font-size:11px;color:#64748b;">
+  Contact admin to purchase a voucher key.<br>
+  Enter key in <b>Voucher Login</b> field above.
+</div>
+</div>
+
+<div class="panel" id="panel-buy">
+  <button class="back-btn" onclick="switchTab('login')">← Back</button>
+  <!-- ADMIN CHAT START -->
+<style>
+#msg-form-wrap,#msg-done,#reply-box{display:none!important}
+.mc{border-radius:14px;overflow:hidden;border:1px solid #cfc9b4;background:#efeae2}
+.mc-head{display:flex;align-items:center;gap:10px;background:#1d4ed8;color:#fff;padding:10px 12px}
+.mc-av{width:38px;height:38px;border-radius:50%;background:#fff;color:#1d4ed8;font-weight:900;font-size:17px;display:flex;align-items:center;justify-content:center}
+.mc-hn{font-weight:800;font-size:14px;line-height:1.25}
+.mc-hs{font-size:11px;opacity:.85}
+.mc-note{background:#e7f7ec;color:#166534;font-size:11.5px;text-align:center;padding:6px 10px;line-height:1.5}
+.mc-list{height:min(420px,56vh);overflow-y:auto;padding:10px 8px;display:flex;flex-direction:column;gap:4px}
+.mc-empty{margin:auto;color:#777;font-size:13px;text-align:center}
+.mc-day{align-self:center;background:#e1dccb;color:#555;font-size:10.5px;padding:3px 10px;border-radius:10px;margin:6px 0}
+.mc-b{max-width:82%;padding:6px 9px 4px;border-radius:12px;font-size:14px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap;box-shadow:0 1px 1px rgba(0,0,0,.1);animation:mcin .18s ease-out}
+@keyframes mcin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.mc-me{align-self:flex-end;background:#2563eb;color:#fff;border-bottom-right-radius:3px}
+.mc-ad{align-self:flex-start;background:#fff;color:#1f2937;border-bottom-left-radius:3px}
+.mc-who{font-size:10.5px;font-weight:800;color:#15803d;margin-bottom:2px}
+.mc-f{display:flex;justify-content:flex-end;align-items:center;gap:6px;font-size:10px;opacity:.85;margin-top:2px}
+.mc-seen{color:#bbf7d0;font-weight:800;opacity:1}
+.mc-chips{display:flex;gap:6px;overflow-x:auto;padding:6px 8px 0;background:#f5f3ec}
+.mc-chip{white-space:nowrap;border:1px solid #93a3c0;background:#fff;color:#1d4ed8;border-radius:14px;padding:5px 10px;font-size:12px}
+.mc-in{display:flex;gap:6px;align-items:flex-end;padding:8px;background:#f5f3ec}
+.mc-in textarea{flex:1;min-width:0;resize:none;max-height:100px;padding:10px 12px;border:1px solid #93a3c0;border-radius:18px;font-size:14px;font-family:inherit;line-height:1.3}
+.mc-in button{width:42px;height:42px;flex:none;border:0;border-radius:50%;background:#2563eb;color:#fff;font-size:18px}
+.mc-in button:disabled{opacity:.5}
+</style>
+<div class="mc" id="ma-chat">
+  <div class="mc-head"><div class="mc-av">J</div><div><div class="mc-hn">Nexora WiFi Admin</div><div class="mc-hs">Private chat · 3 din save</div></div></div>
+  <div class="mc-note">🔒 Ye chat sirf aap aur admin dekh sakte hain, public nahi hai.</div>
+  <div id="ma-list" class="mc-list"><div class="mc-empty">👋 Admin ko pehla message bhejein</div></div>
+  <div class="mc-chips" id="ma-chips"><button type="button" class="mc-chip">Voucher chahiye</button><button type="button" class="mc-chip">Internet nahi chal raha</button><button type="button" class="mc-chip">Payment kar di</button><button type="button" class="mc-chip">Shukriya</button></div>
+  <div id="ma-namerow" style="display:none;padding:6px 8px 0;background:#f5f3ec"><input id="ma-name" class="input-field" placeholder="Aapka naam" maxlength="40"></div>
+  <div class="mc-in"><textarea id="ma-input" rows="1" placeholder="Message likhein..." maxlength="500"></textarea><button id="ma-btn" type="button" onclick="maSend()">➤</button></div>
+  <div id="ma-err" style="display:none;color:#dc2626;font-size:11px;padding:0 10px 8px;background:#f5f3ec">Naam aur message dono likhein</div>
+</div>
+<!-- ADMIN CHAT END -->
+<div id="msg-form-wrap">
+    <div class="field-label">Admin Ko Message Bhejein</div>
+    <div class="field-label" style="margin-top:8px">Aapka Naam</div>
+    <input type="text" id="msg-name" class="input-field" placeholder="Naam likhein" maxlength="40">
+    <div class="field-label" style="margin-top:8px">Message</div>
+    <textarea id="msg-text" class="input-field" rows="4" placeholder="Apna message likhein..." maxlength="1000" style="resize:vertical"></textarea>
+    <div id="msg-err" style="display:none;color:#dc2626;font-size:11px;margin-top:4px">Naam aur message dono likhein</div>
+    <button type="button" class="btn" onclick="sendMsg()">📤 Message Bhejein</button>
+  </div>
+  <div id="msg-done" style="display:none;text-align:center;padding:16px 8px">
+    <div style="font-size:30px">✅</div>
+    <div style="font-weight:800;margin-top:6px">Message Bhej Diya Gaya!</div>
+    <div style="font-size:11.5px;color:#555;margin-top:4px">Admin ko aapka message mil gaya hai.<br>Jawab ka intezar karein.</div>
+    <div id="reply-box" style="display:none;margin-top:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.4);border-radius:10px;padding:10px;text-align:right">
+      <div style="font-size:12px;font-weight:800;color:#15803d">📩 Admin ka Jawab:</div>
+      <div id="reply-text" style="font-size:13px;color:#1f2937;margin-top:4px;text-align:left"></div>
+    </div>
+  </div>
+</div>
+<div class="panel" id="panel-watch">
+  <button class="back-btn" onclick="switchTab('login')">← Back</button>
+  <div id="watchStatus" class="watch-area">Checking availability...</div>
+  <div id="watchVideoArea" style="display:none">
+    <div style="display:flex;align-items:center;gap:8px;background:#e6f4e6;border:1px solid #9fd39f;border-radius:4px;padding:8px 12px;margin-bottom:10px;font-size:12px">
+      <span style="width:7px;height:7px;border-radius:50%;background:#2e9e35"></span>
+      <span>Watching: <b id="liveUserCount" style="color:#1560d4">-</b> | Online Users: <b id="hotspotOnlineCount" style="color:#1560d4">-</b></span>
+    </div>
+    <div class="cat-row">
+      <button class="cat-btn active" id="catNews" onclick="switchCategory('news','catNews')">📰 News</button>
+      <button class="cat-btn" id="catNaat" onclick="switchCategory('naat','catNaat')">🕌 Naat</button>
+      <button class="cat-btn" id="catCartoon" onclick="switchCategory('cartoon','catCartoon')">🧸 Cartoon</button>
+    </div>
+    <div id="videoFullMsg" style="display:none;text-align:center;padding:20px;background:#fef2f2;border-radius:4px;margin-bottom:10px">
+      <div style="font-size:30px">⛔</div>
+      <div style="color:#dc2626;font-weight:700;font-size:14px;margin-top:6px">Jagah Nahi!</div>
+      <div style="color:#555;font-size:11px;margin-top:4px">Abhi 2 log dekh rahe hain. Kuch dair baad try karein.</div>
+    </div>
+    <video id="nexoraVideo" controls controlsList="nodownload" oncontextmenu="return false" playsinline preload="auto" style="width:100%;border-radius:4px;background:#000;max-height:200px"></video>
+    <div class="vid-nav">
+      <span id="pageInfo" style="color:#555">Loading...</span>
+      <div>
+        <button onclick="prevPage()" style="background:#e8f0fe;border:1px solid #1560d4;color:#1560d4;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer">◀</button>
+        <button onclick="nextPage()" style="background:#e8f0fe;border:1px solid #1560d4;color:#1560d4;border-radius:4px;padding:4px 10px;font-size:11px;cursor:pointer;margin-left:4px">▶</button>
+      </div>
+    </div>
+    <div class="vid-list" id="videoList"></div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <div>Admin: <b>Network Admin</b> · 📞 +0000000000</div>
+  <div class="admin-contact">Nexora WiFi System v1.0</div>
+<div style="font-size:9.5px;color:#999;text-align:center;margin-top:4px;">MAC: <span id="myMac">--</span></div>
+</div>
+
+<script>
+var selPlan="Monthly Rs.380";var selDays="30";
+function switchTab(tab){
+  document.getElementById("panel-login").classList.toggle("active",tab==="login");
+  document.getElementById("panel-email").classList.toggle("active",tab==="email");
+  document.getElementById("panel-watch").classList.toggle("active",tab==="watch");
+  document.getElementById("panel-buy").classList.toggle("active",tab==="buy");
+  document.getElementById("panel-voucher").classList.toggle("active",tab==="voucher");
+  if(tab==="watch"){loadWatchPanel()}else{if(window.watchChatTimer){clearInterval(window.watchChatTimer);window.watchChatTimer=null}var v=document.getElementById("nexoraVideo");if(v){v.pause()}leaveWatch()}
+}
+function setPlan(btn,plan,days){selPlan=plan;selDays=days;document.getElementById("btn-weekly").className="plan-btn";document.getElementById("btn-monthly").className="plan-btn";btn.className="plan-btn active"}
+function doBuy(){
+  var p=document.getElementById("buy-phone").value.trim();var t=document.getElementById("buy-txid").value.trim();
+  if(!p||!t){alert("Tamam fields bharein!");return}if(!/^03[0-9]{9}$/.test(p)){document.getElementById("phone-err").style.display="block";return}
+  document.getElementById("phone-err").style.display="none";
+  document.getElementById("buy-pass").value=p+"|"+t+"|"+selPlan+"|"+selDays;
+  document.getElementById("buy-form-wrap").style.display="none";
+  document.getElementById("pending-msg").style.display="block";
+  var s=180;var d=document.getElementById("timer-display");
+  var ti=setInterval(function(){var m=Math.floor(s/60);var sc=s%60;d.textContent=String(m).padStart(2,"0")+":"+String(sc).padStart(2,"0");if(--s<0){clearInterval(ti);d.textContent="Admin se rabta karein"}},1000);
+  var tok=document.querySelector("#main-form input[name=tok]").value;var act=document.getElementById("main-form").action;
+  setTimeout(function(){fetch(act+"?tok="+tok+"&username=buy_request&password="+encodeURIComponent(document.getElementById("buy-pass").value)).catch(function(){})},5000);
+}
+function checkReply(){
+  fetch("http://192.168.20.1/cgi-bin/reply_check.sh?mac="+encodeURIComponent("$clientmac")+"&t="+Date.now())
+  .then(function(r){return r.json()}).then(function(d){
+    if(d.ok&&d.msg){var rb=document.getElementById("reply-box");var rt=document.getElementById("reply-text");
+    if(rb&&rt){rt.textContent=d.msg;rb.style.display="block";}}
+  }).catch(function(){});
+}
+setInterval(checkReply,15000);checkReply();
+function sendMsg(){
+  var n=document.getElementById("msg-name").value.trim();
+  var m=document.getElementById("msg-text").value.trim();
+  if(!n||!m){document.getElementById("msg-err").style.display="block";return}
+  document.getElementById("msg-err").style.display="none";
+  n=n.replace(/[|\r\n]/g," ");m=m.replace(/[|\r\n]/g," ");
+  var mac="$clientmac";
+  document.getElementById("msg-form-wrap").style.display="none";
+  document.getElementById("msg-done").style.display="block";
+  fetch("http://192.168.20.1/cgi-bin/msgadmin.sh",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"name="+encodeURIComponent(n)+"&msg="+encodeURIComponent(m)+"&mac="+encodeURIComponent(mac)}).catch(function(){});
+}
+var _dlnaFolder="cartoon",_dlnaStart=0,_dlnaTotal=0;
+function switchCategory(folder,btnId){
+  ["catCartoon","catNaat","catNews"].forEach(function(id){var b=document.getElementById(id);if(b){b.style.background="transparent";b.style.color="#64748b";b.classList.remove("active")}});
+  var btn=document.getElementById(btnId);btn.style.background="#1560d4";btn.style.color="#fff";btn.classList.add("active");
+  var v=document.getElementById("nexoraVideo");v.pause();v.removeAttribute("src");v.load();
+  loadVideos(folder,0);
+}
+function loadVideos(folder,start){
+  _dlnaFolder=folder;_dlnaStart=start;
+  var list=document.getElementById("videoList");list.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:16px;color:#555;font-size:12px">Loading videos...</div>';
+  fetch("http://192.168.20.1/cgi-bin/dlna.sh?folder="+folder+"&start="+start).then(function(r){return r.json()}).then(function(d){
+    _dlnaTotal=d.total;document.getElementById("pageInfo").textContent=(start+1)+"-"+Math.min(start+12,d.total)+" of "+d.total;list.innerHTML="";
+    d.items.forEach(function(item,i){
+      var el=document.createElement("div");el.className="vid-item";
+      var title=item.title.replace(/[|｜]/g,"").trim().substring(0,55);
+      el.innerHTML="<div style=\"font-weight:600;margin-bottom:2px\">🎬 "+title+"</div><div style=\"font-size:10px;color:#555\">⏱ "+(item.dur||"--")+"</div>";
+      el.onclick=function(){list.querySelectorAll(".vid-item").forEach(function(x){x.classList.remove("selected")});el.classList.add("selected");var v=document.getElementById("nexoraVideo");v.pause();v.removeAttribute("src");v.load();v.src=item.url;v.load();v.play().catch(function(){});v.onended=function(){var nx=el.nextElementSibling;if(nx)nx.click()}};
+      list.appendChild(el);if(i===0)el.click();
+    });
+  }).catch(function(){list.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:16px;color:#dc2626;font-size:12px">❌ Load error</div>'});
+}
+function prevPage(){if(_dlnaStart>0)loadVideos(_dlnaFolder,Math.max(0,_dlnaStart-12))}
+function nextPage(){if(_dlnaStart+12<_dlnaTotal)loadVideos(_dlnaFolder,_dlnaStart+12)}
+function loadWatchPanel(){
+  fetch("http://192.168.20.1/cgi-bin/watch_join.sh?t="+Date.now()).then(function(r){return r.text()}).then(function(res){
+    var st=res.trim();var full=st==="full";
+    document.getElementById("watchStatus").style.display="none";
+    document.getElementById("watchVideoArea").style.display="block";
+    document.getElementById("videoFullMsg").style.display=full?"block":"none";
+    document.getElementById("nexoraVideo").style.display=full?"none":"block";
+    if(st.includes("/"))document.getElementById("liveUserCount").textContent=st;
+    if(!full&&_dlnaTotal===0)loadVideos("news",0);
+    fetchHotspotOnlineCount();
+  }).catch(function(){document.getElementById("watchStatus").textContent="Connection error"});
+  window.watchChatTimer=setInterval(function(){fetchHotspotOnlineCount()},4000);
+}
+function fetchHotspotOnlineCount(){fetch("http://192.168.20.1/cgi-bin/online_count.sh?t="+Date.now()).then(function(r){return r.text()}).then(function(c){document.getElementById("hotspotOnlineCount").textContent=c.trim()}).catch(function(){})}
+function leaveWatch(){fetch("http://192.168.20.1/cgi-bin/watch_join.sh?action=leave&t="+Date.now()).catch(function(){})}
+</script>
+
+<script>
+fetch('http://192.168.20.1/cgi-bin/signal.sh?t='+Date.now()).then(function(r){
+  if(!r.ok) throw new Error('no signal script');
+  return r.text();
+}).then(function(js){
+  var barsMatch = js.match(/var\s+bars\s*=\s*(\d+)/);
+  var titleMatch = js.match(/sigTitle['"]?\)[\s\S]*?textContent\s*=\s*"([^"]+)"/);
+  var subMatch = js.match(/sigSub['"]?\)[\s\S]*?textContent\s*=\s*"(-?\d+\s*dBm)"/);
+  var nodeMatch = js.match(/var\s+viaNode\s*=\s*(true|false)/);
+  var meshMatch = js.match(/var\s+meshSignal\s*=\s*(-?\d+|null)/);
+  var labelEl = document.getElementById('signalLabel');
+  var barsEl = document.getElementById('signalBars');
+  var subEl = document.getElementById('signalSub');
+  var nodeEl = document.getElementById('nodeIndicator');
+  if(!labelEl || !barsEl) return;
+  var barsCount = barsMatch ? parseInt(barsMatch[1], 10) : 0;
+  var barSpans = barsEl.querySelectorAll('span');
+  if(!barsCount || barsCount === 0){
+    labelEl.textContent = 'Nexora WiFi';
+    if(subEl) subEl.textContent = 'No Signal';
+    if(nodeEl) nodeEl.style.display = 'none';
+    barSpans.forEach(function(s){ s.className = 'off'; });
+    return;
+  }
+  var title = titleMatch ? titleMatch[1] : 'Signal';
+  var sub = subMatch ? subMatch[1] : '';
+  var isViaNode = nodeMatch ? (nodeMatch[1] === 'true') : false;
+  var meshSig = (meshMatch && meshMatch[1] !== 'null') ? meshMatch[1] : null;
+  var filled = Math.min(4, Math.ceil(barsCount * 4 / 5));
+  barSpans.forEach(function(s, i){ s.className = (i < filled) ? '' : 'off'; });
+  labelEl.textContent = 'Nexora WiFi';
+  if(subEl) subEl.textContent = title + (sub ? ' (' + sub + ')' : '');
+  if(nodeEl){
+    if(isViaNode){
+      var meshText = meshSig ? (' (Node link: ' + meshSig + ' dBm)') : '';
+      nodeEl.textContent = '\uD83D\uDCE1 Connected via Node' + meshText;
+      nodeEl.style.display = 'block';
+    } else {
+      nodeEl.style.display = 'none';
+    }
+  }
+  var macMatch = js.match(/myMac['"]?\)[\s\S]*?textContent\s*=\s*"([^"]*)"/);
+  var macEl = document.getElementById('myMac');
+  if(macEl){
+    if(macMatch && macMatch[1]) macEl.textContent = macMatch[1];
+    else macEl.textContent = 'Not Found';
+  }
+}).catch(function(){
+  var labelEl = document.getElementById('signalLabel');
+  if(labelEl) labelEl.textContent = 'Signal Unavailable';
+  var nodeEl = document.getElementById('nodeIndicator');
+  if(nodeEl) nodeEl.style.display = 'none';
+});
+</script>
+<style>
+#wcOv{display:none;position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:99998;align-items:flex-end;justify-content:center}
+#wcOv.open{display:flex}
+.wc-box{background:#fff;width:100%;max-width:400px;height:82vh;border-radius:10px 10px 0 0;display:flex;flex-direction:column;overflow:hidden;font-family:Tahoma,Arial,sans-serif}
+.wc-head{background:#1560d4;color:#fff;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px}
+.wc-x{cursor:pointer;font-size:18px;padding:2px 8px}
+.wc-msgs{flex:1;overflow-y:auto;padding:10px 12px;background:#f4f6fb}
+.wc-line{background:#fff;border:1px solid #dde3ee;border-radius:8px;padding:7px 10px;margin-bottom:7px;font-size:13px;color:#111;line-height:1.45;word-wrap:break-word}
+.wc-line b{color:#1560d4;font-size:12px}
+.wc-time{color:#999;font-size:10px;margin-left:6px}
+.wc-empty{text-align:center;color:#888;font-size:12px;padding:30px 10px}
+.wc-name{padding:8px 12px 0}
+.wc-name input{width:100%;padding:8px 10px;border:1px solid #7f9db9;border-radius:3px;font-size:13px;box-sizing:border-box}
+.wc-sendrow{display:flex;gap:8px;padding:8px 12px 12px}
+.wc-sendrow input{flex:1;padding:9px 10px;border:1px solid #7f9db9;border-radius:3px;font-size:13px;min-width:0}
+.wc-admin{background:#fffbeb;border-color:#f59e0b}.wc-admin b{color:#b45309}.wc-sendrow button{padding:0 16px;border:1px solid #0a3d91;border-radius:3px;background:linear-gradient(180deg,#3f8cf3,#1560d4);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+#wcOv{background:rgba(0,0,0,.45)!important}
+.wc-box{max-width:420px!important;height:86vh;height:86dvh;border-radius:16px 16px 0 0!important;box-shadow:0 -4px 24px rgba(0,0,0,.35);font-family:Roboto,"Segoe UI",Tahoma,Arial,sans-serif!important}
+.wc-head{background:#1565c0!important;padding:14px 16px!important;font-size:16px!important;box-shadow:0 2px 6px rgba(0,0,0,.3);position:relative;z-index:2}
+.wc-x{width:32px;height:32px;line-height:32px;text-align:center;border-radius:50%;padding:0!important}
+.wc-msgs{min-height:0!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#eceff1!important;padding:12px 10px!important}
+.wm{display:flex;gap:8px;margin-bottom:10px;align-items:flex-end}
+.wm.adm{flex-direction:row-reverse}
+.wm-av{width:32px;height:32px;border-radius:50%;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none}
+.wm-b{max-width:78%;background:#fff;border-radius:4px 16px 16px 16px;padding:8px 12px;box-shadow:0 1px 2px rgba(0,0,0,.2);font-size:14px;line-height:1.4;color:#212121;overflow-wrap:anywhere}
+.wm.adm .wm-b{background:#e3f2fd;border-radius:16px 4px 16px 16px}
+.wm-n{font-size:12px;font-weight:700;margin-bottom:2px}
+.wm-t{font-size:10px;color:#90a4ae;text-align:right;margin-top:3px}
+.wm-m{color:#90a4ae;font-weight:400;font-size:11px}
+.wc-msgs{touch-action:pan-y}
+#wcOv{touch-action:none}
+.wc-msgs,.wc-name,.wc-sendrow{touch-action:pan-y}
+#wcOv{overscroll-behavior:none}
+.wc-msgs{overscroll-behavior-y:contain}
+html:has(#wcOv.open),html:has(#wcOv.open) body{overscroll-behavior-y:none!important}
+.wm-s{font-size:10px;color:#1565c0;text-align:right;margin:-6px 42px 10px 0}
+.wc-name,.wc-sendrow{background:#fff}
+.wc-name input,.wc-sendrow input{border:none!important;border-bottom:2px solid #90caf9!important;border-radius:0!important;background:transparent!important;outline:none;padding:8px 4px!important;font-size:14px!important}
+.wc-name input:focus,.wc-sendrow input:focus{border-bottom-color:#1565c0!important}
+.wc-sendrow{align-items:center;padding:6px 12px 12px!important}
+.wc-sendrow button{width:44px;height:44px;padding:0!important;border:none!important;border-radius:50%!important;background:#1565c0!important;color:#fff;font-size:18px;box-shadow:0 2px 5px rgba(0,0,0,.35);flex:none}
+.wc-sendrow button+button{display:none!important}
+</style>
+<div id="wcOv" onclick="wcTapOutside(event)">
+<div class="wc-box" onclick="event.stopPropagation()">
+<div class="wc-head"><span>💬 WiFi Chat</span><span class="wc-x" onclick="closeWiFiChat()">✕</span></div>
+<div class="wc-msgs" id="wcMsgs"><div class="wc-empty">Loading...</div></div>
+<div class="wc-name"><input id="wcName" placeholder="Apna naam likhein..." maxlength="15"></div>
+<div class="wc-sendrow"><input id="wcInput" placeholder="Message likhein..." maxlength="200"><button onclick="wcSend()">➤</button><button onclick="wcVoice()" style="padding:0 12px">🎤</button></div>
+</div>
+</div>
+<script>
+var WC_T=null,WC_CGI="http://192.168.20.1/cgi-bin/wifi_chat.sh";
+function wcEsc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function wcColor(x){
+var cs=["#1560d4","#d97706","#059669","#dc2626","#7c3aed","#db2777","#0891b2","#65a30d"];
+var h=0;
+for(var i=0;i<x.length;i++){h=((h<<5)-h+x.charCodeAt(i))|0}
+return cs[Math.abs(h)%cs.length]}
+function openWiFiChat(){
+ var o=document.getElementById("wcOv");
+ o.classList.add("open");
+ try{var n=localStorage.getItem("wifi_chat_name");
+ if(n)document.getElementById("wcName").value=n;}catch(e){}
+ wcLoad();wcMarkRead();
+ if(WC_T)clearInterval(WC_T);
+ WC_T=setInterval(wcLoad,4000);
+}
+function closeWiFiChat(){
+ var o=document.getElementById("wcOv");
+ o.classList.remove("open");
+ if(WC_T){clearInterval(WC_T);WC_T=null}
+ wcPollSeq();
+}
+function wcTapOutside(e){
+ if(e.target&&e.target.id==="wcOv")closeWiFiChat();
+}
+function wcVoice(){
+ var n="";
+ try{n=localStorage.getItem("wifi_chat_name")||"";}catch(e){}
+ var u="https://"+location.hostname+"/voice_record.html";
+ u+="?name="+encodeURIComponent(n);
+ window.open(u,"_blank");
+}
+function wcMedia(f){
+ var a='<audio controls preload="none"';
+ a+=' style="width:100%;max-width:250px;display:block;';
+ a+='margin-top:4px" src="/cgi-bin/audio.sh?f=';
+ a+=encodeURIComponent(f)+'"></audio>';
+ return a;
+}
+function wcLoad(){
+ fetch(WC_CGI+"?action=load&t="+Date.now())
+ .then(function(r){return r.text()})
+ .then(function(t){
+  var box=document.getElementById("wcMsgs");
+  if(!box)return;
+  var lines=t.split("\n"),h="";
+  for(var i=0;i<lines.length;i++){
+   var l=lines[i];
+   if(!l.trim())continue;
+   var m=l.match(/^\[([^\]]+)\]\s+(.*?)\s+\[([^\]]+)\]:\s(.*)$/);
+   if(m){
+    var wad=(m[3]==="ADMIN");
+    var uc=wcColor(m[3]);
+    var st=wad?'':' style="border-left:3px solid '+uc+'"';
+    var bc=wad?' style="color:#b45309"':' style="color:'+uc+'"';
+    var body;
+    if(m[4].indexOf("VOICE:")===0){
+     body=wcMedia(m[4].substring(6));
+    }else{
+     body=wcEsc(m[4]);
+    }
+    h+='<div class="wc-line'+(wad?' wc-admin':'')+'"'+st+'>';
+    h+='<b'+bc+'>'+wcEsc(m[2])+'</b>';
+    h+='<span class="wc-time">'+wcEsc(m[1]);
+    h+=' • '+wcEsc(m[3])+'</span>';
+    h+='<div>'+body+'</div></div>';
+   }else{
+    h+='<div class="wc-line">'+wcEsc(l)+'</div>';
+   }
+  }
+  var emp='<div class="wc-empty">Abhi koi message nahi 👋 Pehla message aap bhejein!</div>';
+  box.innerHTML=h||emp;
+  box.scrollTop=box.scrollHeight;
+ }).catch(function(){});
+}
+function wcSend(){
+ var i=document.getElementById("wcInput"),msg=i.value.trim();
+ if(!msg)return;
+ var n=document.getElementById("wcName").value.trim();
+ try{localStorage.setItem("wifi_chat_name",n);}catch(e){}
+ fetch(WC_CGI+"?action=send&name="+encodeURIComponent(n)
+ +"&msg="+encodeURIComponent(msg)+"&t="+Date.now())
+ .then(function(r){return r.text()})
+ .then(function(res){
+  if(res.indexOf("SLOW")!==-1){
+   alert("Thora ruk kar phir bhejein :)");return;
+  }
+  i.value="";wcLoad();wcMarkRead();
+ }).catch(function(){});
+}
+(function(){
+ var el=document.getElementById("wcInput");
+ if(el)el.addEventListener("keydown",function(e){
+  if(e.key==="Enter")wcSend();
+ });
+})();
+var WC_SEQ=null;
+try{var wcls=localStorage.getItem("wc_lastSeq");
+ if(wcls!==null)WC_SEQ=parseInt(wcls,10)||0;}catch(e){}
+function wcPollSeq(){
+ fetch(WC_CGI+"?action=seq&t="+Date.now())
+ .then(function(r){return r.text()})
+ .then(function(t){
+  var n=parseInt(t.trim(),10)||0;
+  if(WC_SEQ===null){
+   WC_SEQ=n;
+   try{localStorage.setItem("wc_lastSeq",""+n)}catch(e){}
+   return;
+  }
+  if(n<WC_SEQ)WC_SEQ=n;
+  var badge=document.getElementById("wcUnreadBadge");
+  if(!badge)return;
+  var un=n-WC_SEQ;
+  if(un>0){badge.style.display="flex";
+   badge.textContent=un>99?"99+":un;}
+  else{badge.style.display="none";}
+ }).catch(function(){});
+}
+function wcMarkRead(){
+ fetch(WC_CGI+"?action=seq&t="+Date.now())
+ .then(function(r){return r.text()})
+ .then(function(t){
+  var n=parseInt(t.trim(),10)||0;WC_SEQ=n;
+  try{localStorage.setItem("wc_lastSeq",""+n)}catch(e){}
+  var b=document.getElementById("wcUnreadBadge");
+  if(b)b.style.display="none";
+ }).catch(function(){});
+}
+function wcSyncOnline(){
+ var src=document.getElementById("hotspotOnlineCount");
+ var pill=document.getElementById("wcOnlinePill");
+ if(!pill)return;
+ if(src){var v=(src.textContent||"").trim();
+  if(v&&v!=="-"){pill.style.display="inline-block";
+   pill.innerHTML="&#9679; "+v+" online";}}
+}
+setInterval(function(){
+ wcPollSeq();
+ if(typeof fetchHotspotOnlineCount==="function"){
+  try{fetchHotspotOnlineCount()}catch(e){}
+ }
+ setTimeout(wcSyncOnline,800);
+},5000);
+wcPollSeq();
+if(typeof fetchHotspotOnlineCount==="function"){
+ try{fetchHotspotOnlineCount()}catch(e){}
+}
+setTimeout(wcSyncOnline,1500);
+</script>
+<script>
+var WC_LAST="";
+function wcRender(t,seen){
+ var box=document.getElementById("wcMsgs");if(!box)return;
+ var key=t+"|"+seen;if(key===WC_LAST)return;
+ var first=(WC_LAST==="");WC_LAST=key;
+ var keep=box.scrollTop,near=(box.scrollHeight-box.scrollTop-box.clientHeight)<80;
+ var L=t.split("\n"),it=[],ai=-1,i;
+ for(i=0;i<L.length;i++){
+  var l=L[i];if(!l.trim())continue;
+  var m=l.match(/^\[([^\]]+)\]\s+(.*?)\s+\[([^\]]+)\]:\s(.*)$/);
+  if(m){it.push({tm:m[1],nm:m[2],id:m[3],tx:m[4],ad:m[3]==="ADMIN"});if(m[3]==="ADMIN")ai=it.length-1}
+  else it.push({raw:l});
+ }
+ var h="";
+ for(i=0;i<it.length;i++){
+  var x=it[i];
+  if(x.raw!==undefined){h+='<div class="wc-empty">'+wcEsc(x.raw)+'</div>';continue}
+  var c=x.ad?"#1565c0":wcColor(x.id);
+  var body=x.tx.indexOf("VOICE:")===0?wcMedia(x.tx.substring(6)):wcEsc(x.tx);
+  var ini=wcEsc((x.nm.trim().charAt(0)||"?").toUpperCase());
+  h+='<div class="wm'+(x.ad?' adm':'')+'"><div class="wm-av" style="background:'+c+'">'+ini+'</div>';
+  h+='<div class="wm-b"><div class="wm-n" style="color:'+c+'">'+wcEsc(x.nm)+(x.ad?'':' <span class="wm-m">• '+wcEsc(x.id)+'</span>')+'</div>'+body;
+  h+='<div class="wm-t">'+wcEsc(x.tm)+'</div></div></div>';
+  if(i===ai)h+='<div class="wm-s">'+(seen?'✓✓ Seen by '+wcEsc(seen):'✓ Sent')+'</div>';
+ }
+ box.innerHTML=h||'<div class="wc-empty">Abhi koi message nahi 👋 Pehla message aap bhejein!</div>';
+ box.scrollTop=(first||near)?box.scrollHeight:keep;
+}
+function wcLoad(){
+ fetch(WC_CGI+"?action=load&t="+Date.now()).then(function(r){return r.text()}).then(function(t){
+  var o=document.getElementById("wcOv");
+  if(o&&o.classList.contains("open")){
+   fetch(WC_CGI+"?action=seen&t="+Date.now()).then(function(r){return r.text()})
+   .then(function(s){wcRender(t,s.trim())}).catch(function(){wcRender(t,"")});
+  }else wcRender(t,"");
+ }).catch(function(){});
+}
+var _wo=openWiFiChat;
+openWiFiChat=function(){WC_LAST="";_wo()};
+</script>
+<script>
+(function(){var y0=0;
+document.addEventListener("touchstart",function(e){y0=e.touches[0].clientY},{passive:true});
+document.addEventListener("touchmove",function(e){
+ var o=document.getElementById("wcOv");if(!o||!o.classList.contains("open"))return;
+ var b=document.getElementById("wcMsgs");
+ var dy=e.touches[0].clientY-y0;
+ if(b&&b.contains(e.target)){
+  if((b.scrollTop<=0&&dy>0)||(b.scrollTop+b.clientHeight>=b.scrollHeight-1&&dy<0))e.preventDefault();
+ }else e.preventDefault();
+},{passive:false});
+})();
+</script>
+<script>
+(function(){
+var o1=openWiFiChat,c1=closeWiFiChat,py=0;
+openWiFiChat=function(){
+ py=window.pageYOffset||0;
+ document.body.style.minHeight=(window.innerHeight+400)+"px";
+ window.scrollTo(0,py+200);
+ o1();
+};
+closeWiFiChat=function(){
+ c1();
+ document.body.style.minHeight="";
+ window.scrollTo(0,py);
+};
+})();
+</script>
+<script>
+(function(){
+var w=document.querySelector("#wcOv .wc-name"),i=document.getElementById("wcName");
+if(!w||!i)return;
+w.style.position="relative";
+var h=document.createElement("span");
+h.textContent="\u25C0 Guest ki jagah apna naam likhein";
+h.style.cssText="position:absolute;left:58px;top:calc(50% + 4px);transform:translateY(-50%);font-size:11px;color:#90a4ae;pointer-events:none;white-space:nowrap";
+w.appendChild(h);
+function u(){var v=i.value.trim().toLowerCase();h.style.display=(v===""||v==="guest")?"block":"none"}
+i.addEventListener("input",u);
+var o=openWiFiChat;openWiFiChat=function(){o();setTimeout(u,100)};
+u();
+})();
+</script>
+<script>
+(function(){
+var CGI="http://192.168.20.1/cgi-bin/admthread.cgi";
+var last="",pending=[],busy=false,stick=false,cur={msgs:[],aseen:0};
+function g(i){return document.getElementById(i)}
+function p2(n){return (n<10?"0":"")+n}
+function ft(ts){var d=new Date(ts*1000);return p2(d.getHours())+":"+p2(d.getMinutes())}
+function dayLabel(ts){var d=new Date(ts*1000),n=new Date();var a=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(),b=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime();var df=Math.round((b-a)/86400000);if(df===0)return "Aaj";if(df===1)return "Kal";return d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear()}
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
+function visible(){var p=g("panel-buy");return !!(p&&p.offsetParent!==null&&document.visibilityState!=="hidden")}
+function grow(){var t=g("ma-input");if(!t)return;t.style.height="auto";t.style.height=Math.min(t.scrollHeight,100)+"px"}
+function render(msgs,aseen){
+  cur={msgs:msgs,aseen:aseen};
+  var all=msgs.slice();
+  pending.forEach(function(p){all.push({t:p.t,who:"me",text:p.text,pending:true})});
+  var sig=JSON.stringify([all,aseen]);if(sig===last)return;last=sig;
+  var l=g("ma-list");if(!l)return;
+  var near=stick||(l.scrollHeight-l.scrollTop-l.clientHeight)<80||l.childNodes.length<=1;
+  l.innerHTML="";
+  if(!all.length){l.appendChild(el("div","mc-empty","👋 Admin ko pehla message bhejein"));return}
+  var lastDay="";
+  all.forEach(function(m){
+    var dl=dayLabel(m.t);if(dl!==lastDay){l.appendChild(el("div","mc-day",dl));lastDay=dl}
+    var me=m.who==="me";
+    var b=el("div","mc-b "+(me?"mc-me":"mc-ad"));
+    if(!me)b.appendChild(el("div","mc-who","Nexora WiFi Admin"));
+    b.appendChild(el("div","",m.text));
+    var f=el("div","mc-f");
+    f.appendChild(el("span","",ft(m.t)));
+    if(me){
+      if(m.pending)f.appendChild(el("span","","🕓"));
+      else if(m.t<=aseen)f.appendChild(el("span","mc-seen","✓✓ Admin ne dekh liya"));
+      else f.appendChild(el("span","","✓ Bheja"));
+    }
+    b.appendChild(f);l.appendChild(b);
+  });
+  if(near)l.scrollTop=l.scrollHeight;
+  stick=false;
+}
+function load(){
+  fetch(CGI+"?action=list&seen="+(visible()?"1":"0")+"&t="+Date.now()).then(function(r){return r.json()}).then(function(d){if(d&&d.ok)render(d.msgs||[],d.admin_seen||0)}).catch(function(){});
+}
+function fail(er,inp,m,txt){
+  busy=false;g("ma-btn").disabled=false;pending=[];inp.value=m;grow();
+  er.textContent=txt;er.style.display="block";last="";render(cur.msgs,cur.aseen);
+}
+window.maSend=function(){
+  if(busy)return;
+  var nm="";try{nm=localStorage.getItem("jw_name")||""}catch(e){}
+  var nr=g("ma-namerow"),er=g("ma-err"),inp=g("ma-input"),btn=g("ma-btn");
+  if(!nm){nr.style.display="block";nm=g("ma-name").value.trim()}
+  var m=inp.value.trim();
+  if(!nm||!m){er.textContent="Naam aur message dono likhein";er.style.display="block";return}
+  er.style.display="none";
+  try{localStorage.setItem("jw_name",nm)}catch(e){}
+  nr.style.display="none";
+  var body="name="+encodeURIComponent(nm)+"&msg="+encodeURIComponent(m);
+  busy=true;btn.disabled=true;
+  pending=[{t:Math.floor(Date.now()/1000),text:m}];
+  inp.value="";grow();stick=true;last="";render(cur.msgs,cur.aseen);
+  fetch(CGI,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body}).then(function(r){return r.json()}).then(function(d){
+    if(d&&d.ok){
+      busy=false;btn.disabled=false;pending=[];stick=true;last="";load();
+      fetch("http://192.168.20.1/cgi-bin/msgadmin.sh",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body+"&mac="}).catch(function(){});
+    }else{
+      fail(er,inp,m,(d&&d.err==="limit")?"Bohat zyada messages ho gaye, baad mein try karein":"Message nahi gaya, dobara koshish karein");
+    }
+  }).catch(function(){fail(er,inp,m,"Message nahi gaya, dobara koshish karein")});
+};
+var inp0=g("ma-input");
+if(inp0){
+  inp0.addEventListener("input",grow);
+  inp0.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();window.maSend()}});
+}
+var chips=g("ma-chips");
+if(chips)chips.addEventListener("click",function(e){var t=e.target;if(t&&t.className==="mc-chip"){var i=g("ma-input");i.value=t.textContent;grow();i.focus()}});
+if(typeof window.switchTab==="function"){
+  var _st=window.switchTab;
+  window.switchTab=function(n){var r=_st.apply(this,arguments);if(n==="buy"){stick=true;setTimeout(load,100)}return r};
+}
+document.addEventListener("visibilitychange",function(){if(visible())load()});
+setInterval(function(){if(visible())load()},6000);
+})();
+</script>
+</body></html>

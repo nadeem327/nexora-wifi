@@ -1,0 +1,13 @@
+# Local secrets (keep on your machine, do NOT commit)
+secrets/*.local
+*.local
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~

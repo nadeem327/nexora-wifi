@@ -1,0 +1,18 @@
+
+config samba
+	option workgroup 'WORKGROUP'
+	option macos_compat '1'
+	option socket_options 'TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=131072 SO_SNDBUF=131072'
+	option deadtime '30'
+	option min_protocol 'SMB2'
+	option max_protocol 'SMB3'
+
+config sambashare
+	option name 'Media'
+	option path '/mnt/usb'
+	option read_only 'no'
+	option guest_ok 'yes'
+	option create_mask '0777'
+	option dir_mask '0777'
+	option force_root '1'
+

@@ -1,0 +1,16 @@
+
+config opennds
+	option gatewayinterface 'br-hotspot'
+	option gatewayaddress '192.168.20.1'
+	option gatewayname 'NEXORA'
+	option maxclients '50'
+	option login_option_enabled '1'
+	option sessiontimeout '2592000'
+	option preauthidletimeout '30'
+	option debuglevel '2'
+	option enable_serial_number_suffix '0'
+	option fwhook_enabled '1'
+	option faskey '71c55a793443be95f1a04c51838d37c2fa24789ddf33b6dcbceb9fd585e3b114'
+	option binauth '/usr/bin/monthly_auth.sh'
+	list trustedmac '8c:3b:ad:1c:d5:76'
+

@@ -1,0 +1,2 @@
+config easymesh 'config'
+	option enabled '0'
