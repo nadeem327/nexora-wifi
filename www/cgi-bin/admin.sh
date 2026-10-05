@@ -284,8 +284,7 @@ if [ -n "$arp_all" ]; then
 <div style='font-family:monospace;font-size:.7rem;color:#64748b;margin-top:4px;'>${mac} · $(get_manufacturer "$mac") · ${client_ip}</div>
 <div style='margin-top:6px;font-size:.75rem;color:#22d3ee;font-weight:600;' data-usage='${mac}'>${usage_str}</div>
 <div style='margin-top:6px;'><span class='chip ${badge_cls}' data-status='${mac}'>${st}</span></div>
-<div style='display:flex;justify-content:space-between;align-items:center;margin-top:8px;'><div><button onclick='checkActivity("${mac}")' class='btn bc bsm' type='button'>🔍 Check Activity</button> <a href='admin.sh?pass=$ADMIN_PASS&editname=${mac}' class='btn bc bsm' style='text-decoration:none;display:inline-block;margin-left:4px;'>Rename</a></div><span class='chip cg'>🟢 Auth</span></div>
-<div id='activity-${mac}' style='margin-top:6px;font-size:.7rem;'></div>
+<div style='display:flex;justify-content:space-between;align-items:center;margin-top:8px;'><div><a href='admin.sh?pass=$ADMIN_PASS&editname=${mac}' class='btn bc bsm' style='text-decoration:none;display:inline-block;'>Rename</a></div><span class='chip cg'>🟢 Auth</span></div>
 </div>"$'\n'
         else
             trial_form() {
@@ -899,31 +898,6 @@ onPoll();var onSmooth=setInterval(onPoll,1500);
 
 var onT=null; /*replaced*/
 window.addEventListener("resize",function(){mmRender()});
-function checkActivity(mac){
-  var box=document.getElementById("activity-"+mac);
-  if(!box)return;
-  box.innerHTML="<span style='color:#64748b'>Loading...</span>";
-  fetch("/cgi-bin/device_activity.sh?mac="+encodeURIComponent(mac)+"&t="+Date.now())
-  .then(function(r){return r.text();})
-  .then(function(t){
-    if(t.indexOf("Content-Type")!==-1){var p=t.split("\n\n");t=p.slice(1).join("\n\n");}
-    try{var d=JSON.parse(t);
-      if(d.error){box.innerHTML="<span style='color:#ef4444'>"+d.error+"</span>";return;}
-      var h="<div style='background:rgba(255,255,255,0.05);padding:8px;border-radius:6px;color:#e2e8f0'>";
-      h+="<b>IP:</b> "+d.ip+"<br>";
-      if(d.entries&&d.entries.length>0){
-        h+="<b>DNS Queries ("+d.entries.length+"):</b><br>";
-        for(var i=0;i<Math.min(d.entries.length,15);i++){
-          var e=d.entries[i];var m=Math.floor(e.ago/60);var s=e.ago%60;
-          var ts=m>0?m+"m "+s+"s":s+"s";
-          h+="<span style='color:#64748b'>"+ts+" ago</span> "+e.domain+"<br>";
-        }
-      }else{h+="<span style='color:#64748b'>No DNS activity</span>";}
-      h+="</div>";box.innerHTML=h;
-    }catch(e){box.innerHTML="<pre style='color:#e2e8f0;font-size:11px'>"+t+"</pre>";}
-  })
-  .catch(function(e){box.innerHTML="<span style='color:#ef4444'>Error</span>";});
-}
 </script>
 <script>
 function toggleTheme(){

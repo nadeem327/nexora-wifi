@@ -68,8 +68,7 @@ while read -r cip _ mac st; do
     stbadge="<span class='arp-state status-badge status-online' data-status='${mac}'>${st}</span>"
     if grep -qi "^$mac$" "$TRUSTED_FILE" 2>/dev/null; then
         abadge="<span style='background:#22c55e20;color:#22c55e;padding:3px 10px;border-radius:20px;font-size:12px;border:1px solid #22c55e50' data-badge='${mac}'>Authenticated</span>"
-        activity="<div style='margin-top:6px;'><button onclick='checkActivity(\"${mac}\")' class='activity-btn'>🔍 Check Live Activity</button><div id='activity-${mac}' class='activity-result'></div></div>"
-        auth_entries="${auth_entries}${card_top}<div class='status-line'>${stbadge}${abadge}</div>${activity}</div>"$'\n'
+        auth_entries="${auth_entries}${card_top}<div class='status-line'>${stbadge}${abadge}</div></div>"$'\n'
     else
         abadge="<span style='background:#fbbf2420;color:#fbbf24;padding:3px 10px;border-radius:20px;font-size:12px;border:1px solid #fbbf2450' data-badge='${mac}'>Blocked</span>"
         trials="<div style='margin-top:6px;'>"
